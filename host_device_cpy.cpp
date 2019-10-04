@@ -36,7 +36,7 @@ int main() {
 
     std::vector<double> perfs(times.size());
     std::transform(times.begin(), times.end(), perfs.begin(),
-                   [=](auto t) { return size / t * 1e-9; });
+                   [=](auto t) { return 2. * size / t * 1e-9; });
     auto [pmean, perr] = meanAndStdErr(perfs);
 
     std::cout << "\nPerf " << pmean << " +- " << perr << std::endl;
