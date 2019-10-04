@@ -28,6 +28,8 @@ int main() {
           }
         },
         stream, n_meas);
+    std::transform(times.begin(), times.end(), times.begin(),
+                   [=](auto x) { return x / (2 * n_pings); });
 
     cudaFree(v1);
     cudaFree(v2);
@@ -37,7 +39,7 @@ int main() {
 
     std::vector<double> perfs(times.size());
     std::transform(times.begin(), times.end(), perfs.begin(),
-                   [=](auto t) { return 2. * size / t * 1e-9; });
+                   [=](auto t) { return  size / t * 1e-9; });
     auto [pmean, perr] = meanAndStdErr(perfs);
 
     std::cout << "\nPerf " << pmean << " +- " << perr << std::endl;

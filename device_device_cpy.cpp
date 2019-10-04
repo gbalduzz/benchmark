@@ -14,8 +14,8 @@ int main() {
        std::vector<unsigned>{1, 100, 100000, 1000000, 100000000, 1000000000}) {
     char *v1;
     char *v2;
-    cudaMalloc((void**) &v1, size);
-    cudaMalloc((void**) &v2, size);
+    cudaMalloc((void **)&v1, size);
+    cudaMalloc((void **)&v2, size);
     cudaMemset(v1, 0, size);
 
     const int n_meas = size <= 100 ? 1000 : 10;
@@ -28,6 +28,8 @@ int main() {
           }
         },
         stream, n_meas);
+    std::transform(times.begin(), times.end(), times.begin(),
+                   [=](auto x) { return x / (2 * n_pings); });
 
     cudaFree(v1);
     cudaFree(v2);
@@ -37,7 +39,7 @@ int main() {
 
     std::vector<double> perfs(times.size());
     std::transform(times.begin(), times.end(), perfs.begin(),
-                   [=](auto t) { return 2. * size / t * 1e-9; });
+                   [=](auto t) { return size / t * 1e-9; });
     auto [pmean, perr] = meanAndStdErr(perfs);
 
     std::cout << "\nPerf " << pmean << " +- " << perr << std::endl;
